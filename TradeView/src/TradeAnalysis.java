@@ -5,7 +5,7 @@ public class TradeAnalysis {
 	
 	
 	public TradeAnalysis() {
-		this.TR =  new TradeReader("trades3.csv");
+		this.TR =  new TradeReader("trades4.csv");
 		
 	}
 	
@@ -49,7 +49,7 @@ public class TradeAnalysis {
 		int currentPosition =0;
 		for (Trade trade : TR.blotter) {
 			if(trade.getTicker().equals(ticker)) {
-				if(trade.getDirection().equals("Buy")) {
+				if(trade.getDirection().equals("Bought")) {
 					currentPosition = currentPosition + trade.getSize();
 				} else {
 					currentPosition = currentPosition - trade.getSize();
@@ -73,7 +73,7 @@ public class TradeAnalysis {
 		if(positionCalc(ticker) ==0) {
 			for (Trade trade : TR.blotter) {
 				if(trade.getTicker().equals(ticker)) {
-					if(trade.getDirection().equals("Buy")) {
+					if(trade.getDirection().equals("Bought")) {
 						tickerPnl = tickerPnl - trade.getProceeds();
 					} else {
 						tickerPnl = tickerPnl + trade.getProceeds();
@@ -97,11 +97,14 @@ public class TradeAnalysis {
 	 */
 	public double pnlTotalClosed(ArrayList<String> allTickers) {
 		double totalClosedPnl =0;
+		System.out.println("TICKER \t PNL" );
+		System.out.println("====== \t =========" );
 		for (String ticker : allTickers) {
 			double pnl = pnlClosed(ticker);
 			totalClosedPnl += pnl;
 			if(pnl != 0) {
-				System.out.println("PNL in " + ticker + " is " + pnl);
+				
+				System.out.printf("%s \t %.2f \n", ticker, pnl);
 			}
 			
 			
@@ -110,8 +113,8 @@ public class TradeAnalysis {
 		totalClosedPnl = Math.round(totalClosedPnl * 100);
 		totalClosedPnl = totalClosedPnl/100;
 		System.out.println();
-		System.out.println("The total ytd pnl in closed trades is : " + totalClosedPnl);
-		System.out.println("This is inclusive of comissions paid of :" + comissionPaid());
+		System.out.printf("The total pnl in closed trades is : %.2f \n", totalClosedPnl);
+		System.out.printf("This is inclusive of comissions paid of : %.2f \n", comissionPaid());
 		System.out.println();
 		return totalClosedPnl;
 		
@@ -197,7 +200,7 @@ public class TradeAnalysis {
 		for (String ticker : tickers) {
 			int position = positionCalc(ticker);
 			if(position != 0) {
-				System.out.println(ticker + ": " + position + " shares");
+				System.out.printf("%s \t %d shares \n", ticker, position);
 			}
 			
 		}
@@ -222,7 +225,7 @@ public class TradeAnalysis {
 	public static void main(String[] args) {
 		
 		TradeAnalysis TA = new TradeAnalysis();
-		TA.allTrades();
+		//TA.allTrades();
 		//TA.distinctTickers();
 		//TA.positionCalc("ROKU");
 		//TA.pnlClosed("TVIX");

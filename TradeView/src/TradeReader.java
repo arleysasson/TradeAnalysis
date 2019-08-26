@@ -22,30 +22,37 @@ public class TradeReader {
 			int size;
 			double price;
 			double comission;
-			double proceeds;
+			double proceeds = 0;
 			
 			
 			while (scanner.hasNextLine()) {
 				String tradeRow = scanner.nextLine();
 				String[] columnData = tradeRow.split(",");
 				
-				if((columnData[2].substring(0, 1)).equals("9")) {
+				if(!(columnData[2].substring(0, 2)).equals("EQ")) {
 				} else {
 					
 				
 				date = new TDate((columnData[0]));
 				direction = columnData[1];
-				ticker = columnData[2];
-				size = Integer.parseInt(columnData[5]);
+				ticker = columnData[3];
+				size = Math.abs(Integer.parseInt(columnData[4]));
 				price = Double.parseDouble(columnData[6]);
 				comission = Double.parseDouble(columnData[7]);
-				proceeds = Double.parseDouble((columnData[8]).substring(0, columnData[8].length()-1));
+				if(direction.equals("Bought")){
+					proceeds = (size*price) + comission;
+				}
+				if(direction.equals("Sold")){
+					proceeds = (size*price) - comission;
+				}	
 				
-				Trade trade = new Trade(date, direction, ticker, size, price, comission, proceeds);
-				blotter.add(trade);
+				if(direction.equals("Bought") || direction.equals("Sold")) {
+					Trade trade = new Trade(date, direction, ticker, size, price, comission, proceeds);
+					
+					blotter.add(trade);
 				
-				
-				
+					}
+					
 				
 				}
 			
